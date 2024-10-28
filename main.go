@@ -93,19 +93,56 @@ func main() {
 		fmt.Print("Enter number of tickets: ")
 		fmt.Scan(&userTickets)
 
-		remainingTickets = remainingTickets - userTickets
+		isValidName := len(firstName) > 2 && len(lastName) > 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-		// storing to slices
-		bookings = append(bookings, firstName + " " + lastName)
+		if isValidName && isValidEmail && isValidTicketNumber {
+			remainingTickets = remainingTickets - userTickets
 
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+			// storing to slices
+			bookings = append(bookings, firstName + " " + lastName)
 
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+
+			firstNames := []string{}
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+			fmt.Printf("These are our booking list: %v\n", firstNames)
+
+			if remainingTickets == 0 {
+				fmt.Println("All tickets are sold out.")
+				break
+			}
+		} else {
+			if !isValidName {
+				fmt.Println("first name or last name is too short.")
+			}
+			if !isValidEmail {
+				fmt.Println("email is invalid.")
+			}
+			if !isValidTicketNumber {
+				fmt.Printf("Sorry, we only have %v tickets remaining.\n", remainingTickets)
+			}
 		}
-		fmt.Printf("These are our booking list: %v\n", firstNames)
+	}
+
+	city := "Jakarta"
+
+	switch city {
+	case "New York":
+		fmt.Println("Conference location is New York")
+	
+	case "Jakarta", "Singapore", "Hong Kong", "Tokyo":
+		fmt.Println("Conference location is Asia")
+
+	case "London", "Paris", "Berlin":
+		fmt.Println("Conference location is Europe")
+	
+	default:
+		fmt.Println("Conference location is unknown")
 	}
 }
