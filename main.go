@@ -3,14 +3,21 @@ package main
 import (
 	"fmt"
 	"pbkk-go/helper"
-	"strings"
 )
 
 // Variable and constant
 var conferenceName = "Go Conference" // should manually use var when declaring variable in package level
 const conferenceTickets int = 50
+
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]UserData, 0)
+
+type UserData struct {
+	firstName   string
+	lastName    string
+	email       string
+	userTickets uint
+}
 
 func main() {
 
@@ -56,10 +63,9 @@ func greetUsers() {
 }
 
 func getFirstNames() []string {
-	firstNames := []string{}
+	firstNames := []string{} // -> local variable, only can be used in this scope
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -89,8 +95,21 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(firstName string, lastName string, email string, userTickets uint) {
 	remainingTickets = remainingTickets - userTickets
 
+	// create map for user
+	var userData = UserData{
+		firstName:   firstName,
+		lastName:    lastName,
+		email:       email,
+		userTickets: userTickets,
+	}
+	// userData["firstName"] = firstName
+	// userData["lastName"] = lastName
+	// userData["email"] = email
+	// userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
 	// storing to slices
-	bookings = append(bookings, firstName+" "+lastName)
+	bookings = append(bookings, userData)
+	fmt.Printf("List of booking is %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
